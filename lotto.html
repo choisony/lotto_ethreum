@@ -1,0 +1,251 @@
+<html>
+<head>
+<script src='web3.min.js'></script>
+<script type="text/javascript">
+var accounts;
+var contractInstance =null;
+var resultbox;
+
+window.addEventListener('load', async () => {
+    if (window.ethereum) {
+    window.alert('Modern dapp browsers')
+  } else if (window.web3) {
+    alert('Legacy dapp browsers')
+  } else {
+    alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  }
+  let btn = document.getElementById("btn");
+  btn.addEventListener('click', btnClicked);
+	btn = document.getElementById("play");
+	btn.addEventListener('click', playClicked);
+	btn = document.getElementById("getwinner");
+	btn.addEventListener('click', getwinnerClicked);
+	btn = document.getElementById("raffle");
+	btn.addEventListener('click', raffleClicked);
+	btn = document.getElementById("next_week");
+	btn.addEventListener('click', nextweekClicked);
+	btn = document.getElementById("get_p");
+	btn.addEventListener('click', getPClicked);
+	resultbox = document.getElementById("resultbox");
+});
+
+async function btnClicked() {
+  accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+  const showAccount = document.querySelector('.showAccount');
+  showAccount.innerHTML = accounts[0];
+  var abiobj = [
+	{
+		"inputs": [],
+		"stateMutability": "payable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "GoingToNextWeekLotto",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getParticipantsNumber",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getRaffleEtherBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "myEtherBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "participants",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "play",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "raffle",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "week_ended",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "week_status",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "winner",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+  var address = "0xB3DEaDF0915969A5b2F4Fa94381B83a64971Ea40";
+  window.web3 = new Web3(window.ethereum);
+  contractInstance = await new window.web3.eth.Contract(abiobj, address);
+}
+
+
+async function playClicked() {
+    if (contractInstance != null) {
+			alert('hi');
+    try {
+      await contractInstance.methods.play().send({from:accounts[0],value: 10**17});
+    } catch (e) {
+      resultbox.innerHTML = "Error Occured: " + e;
+    }
+  }
+}
+
+
+async function getwinnerClicked() {
+  const value = await contractInstance.methods.winner().call();
+  resultbox.innerHTML = value;
+}
+
+async function getPClicked() {
+  const value = await contractInstance.methods.getParticipantsNumber().call();
+  resultbox.innerHTML = value;
+}
+async function raffleClicked() {
+    if (contractInstance != null) {
+    try {
+      let value = await contractInstance.methods.raffle().send({from:accounts[0]});
+      resultbox.innerHTML = value;
+    } catch (e) {
+      resultbox.innerHTML = "Error Occured: " + e;
+    }
+  }
+}
+
+async function nextweekClicked() {
+    if (contractInstance != null) {
+    try {
+      let value = await contractInstance.methods.GoingToNextWeekLotto().send({from:accounts[0]});
+      resultbox.innerHTML = value;
+    } catch (e) {
+      resultbox.innerHTML = "Error Occured: " + e;
+    }
+  }
+}
+
+async function ownerClicked() {
+  const value = await contractInstance.methods.owner().call();
+  resultbox.innerHTML = value;
+}
+
+
+
+</script></head>
+<body>
+<h1> lotto hihihihi </h1>
+<br/>
+<input type="image" id="btn" src="./img/MetaMask_Fox.svg.png" height="80" width="80" value="Connect to MetaMask">
+<h2>cost : 1 ether</h2>
+<h2>Account: <span class="showAccount"></span></h2>
+<!-- <h2>My balance: </h2> -->
+
+<input type="button" id="play" value="play">
+<br/>
+<input type="button" id="getwinner" value="winner">
+<br/>
+<input type="button" id="raffle" value="Go">
+<br/>
+<input type="button" id="next_week" value="One More">
+<br/>
+<input type="button" id="get_p" value="participants">
+<br/>
+<br/>
+Result: <span id="resultbox"> </span>
+</body> </html>
