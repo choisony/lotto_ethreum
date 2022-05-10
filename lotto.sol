@@ -5,6 +5,7 @@ contract lotto {
     address public owner;
     address payable[] public participants;
     bool public week_ended;			// 로또 종료 여부
+    string public week_status;		// 로또 상황
     uint balance = address(this).balance;
     address payable public winner;
 
@@ -14,7 +15,7 @@ contract lotto {
     }
 
     function play() public payable{
-        require(msg.value == 0.2 ether, "You need to have 0.02 ether");
+        require(msg.value == 0.1 ether, "You need to have 0.01 ether");
         require(week_ended == false, "Wait for next week");
 
         participants.push(payable(msg.sender));
@@ -36,7 +37,7 @@ contract lotto {
     }
 
     function getRaffleEtherBalance() view public returns(uint) {
-        return address(this).balance/(10**18);
+        return address(this).balance;
     }
 
     function GoingToNextWeekLotto() public {
