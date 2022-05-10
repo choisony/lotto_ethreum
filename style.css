@@ -1,0 +1,91 @@
+body {
+	/* background: burlywood; */
+	background-repeat: no-repeat;
+	height: 100vh;
+	background-position: center;
+	background-size: 100% 100%;
+}
+
+
+
+.lotto-button {
+	width: 200px;
+	color: #000;
+	background: rgb(255, 222, 114);
+	border: 3px solid #ffffff;
+	padding: 10px;
+	border-radius: 10px;
+	font-weight: bold;
+    font-size: 130%;
+    text-align: center;
+}
+
+.info {
+    width: 600px ;
+	color: #000;
+	background: pink;
+	border: 3px solid #ffffff;
+	padding: 10px;
+	border-radius: 10px;
+	font-weight: bold;
+    font-size: 130%;
+    text-align: left;
+    margin: 5px;
+}
+
+.play_div {
+    width: 650px ;
+	color: #000;
+	background: rgb(203, 240, 149);
+	border: 3px solid #ffffff;
+	padding: 10px;
+	border-radius: 10px;
+	font-weight: bold;
+    font-size: 130%;
+    text-align: left;
+    margin: 5px;
+}
+.inbtn {
+    
+	color: #000;
+	background: rgb(242, 255, 223);
+	border: 3px solid #ffffff;
+	padding: 10px;
+	border-radius: 10px;
+    font-size: 100%;
+    text-align: left;
+
+    
+}
+
+.lotto-button:hover {
+	background: #756300;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.lotto-button:active {
+	background: #756300;
+	color: #ffffff;
+}
+
+.lotto-button:focus {
+	background-color: #756300;
+	outline:0;
+}
+
+.inbtn:hover {
+	background: #596648;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.inbtn:active {
+	background: #596648;
+	color: #ffffff;
+}
+
+.inbtn:focus {
+	background-color: #596648;
+	outline:0;
+}
