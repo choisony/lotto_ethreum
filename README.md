@@ -1,5 +1,6 @@
 # lotto_ethreum
 
+Deploy lotto.sol in Remix IDE
 
 Terminal
 
