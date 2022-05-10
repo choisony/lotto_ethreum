@@ -1,38 +1,65 @@
 <html>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		
+		<link rel="stylesheet" href="style.css">
+	</head>
 <head>
 <script src='web3.min.js'></script>
 <script type="text/javascript">
 var accounts;
 var contractInstance =null;
 var resultbox;
+var winner;
+var owner;
+var participants;
+var total
+// var balance;
 
 window.addEventListener('load', async () => {
     if (window.ethereum) {
-    window.alert('Modern dapp browsers')
+    window.alert('** Welcome to Lotto World **')
   } else if (window.web3) {
     alert('Legacy dapp browsers')
   } else {
     alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
   }
   let btn = document.getElementById("btn");
-  btn.addEventListener('click', btnClicked);
+  	btn.addEventListener('click', btnClicked);
 	btn = document.getElementById("play");
 	btn.addEventListener('click', playClicked);
 	btn = document.getElementById("getwinner");
 	btn.addEventListener('click', getwinnerClicked);
+	winner = document.getElementById("winner");
 	btn = document.getElementById("raffle");
 	btn.addEventListener('click', raffleClicked);
 	btn = document.getElementById("next_week");
 	btn.addEventListener('click', nextweekClicked);
 	btn = document.getElementById("get_p");
 	btn.addEventListener('click', getPClicked);
-	resultbox = document.getElementById("resultbox");
+	participants = document.getElementById("participants");
+	btn = document.getElementById("getOwner");
+	btn.addEventListener('click', ownerClicked);
+	owner = document.getElementById("owner");
+	btn = document.getElementById("getTotal");
+	btn.addEventListener('click', total);
+	total = document.getElementById("total");
+	// balance = document.getElementById("balance");
+
 });
+
 
 async function btnClicked() {
   accounts = await ethereum.request({ method: 'eth_requestAccounts' });
   const showAccount = document.querySelector('.showAccount');
   showAccount.innerHTML = accounts[0];
+  let balance = await ethereum.request({ method: 'eth_getBalance', params:[accounts[0]] });
+  balance = parseInt(balance);
+	balance = balance / Math.pow(10,18);
+  const showBalance = document.querySelector('.showBalance');
+  showBalance.innerHTML = balance;
   var abiobj = [
 	{
 		"inputs": [],
@@ -171,81 +198,142 @@ async function btnClicked() {
 		"type": "function"
 	}
 ];
-  var address = "0xB3DEaDF0915969A5b2F4Fa94381B83a64971Ea40";
+  var address = "0x0D4F3acdf78B2e74798d3e99E9dCfAf38788c786";
   window.web3 = new Web3(window.ethereum);
   contractInstance = await new window.web3.eth.Contract(abiobj, address);
-}
 
+}
+async function total() {
+  let value = await contractInstance.methods.getRaffleEtherBalance().call();
+  value = value / Math.pow(10,18);
+  total.innerHTML = value;
+}
 
 async function playClicked() {
     if (contractInstance != null) {
-			alert('hi');
     try {
       await contractInstance.methods.play().send({from:accounts[0],value: 10**17});
     } catch (e) {
-      resultbox.innerHTML = "Error Occured: " + e;
     }
+  }
+  else{
+	  alert('Please click the MetaMask')
   }
 }
 
 
 async function getwinnerClicked() {
   const value = await contractInstance.methods.winner().call();
-  resultbox.innerHTML = value;
+  winner.innerHTML = value;
 }
 
 async function getPClicked() {
   const value = await contractInstance.methods.getParticipantsNumber().call();
-  resultbox.innerHTML = value;
+  participants.innerHTML = value;
 }
 async function raffleClicked() {
-    if (contractInstance != null) {
-    try {
-      let value = await contractInstance.methods.raffle().send({from:accounts[0]});
-      resultbox.innerHTML = value;
-    } catch (e) {
-      resultbox.innerHTML = "Error Occured: " + e;
-    }
-  }
+	if (contractInstance != null) {
+		if (accounts[0].toLowerCase() != (await contractInstance.methods.owner().call()).toLowerCase()){
+			alert('only OWNER')
+		}
+		else{
+			try {
+			let value = await contractInstance.methods.raffle().send({from:accounts[0]});
+			resultbox.innerHTML = value;
+			
+			} catch (e) {
+
+		}
+
+		}
+		
+		
+	}
+	else{
+		alert('Please click the MetaMask')
+
+}
 }
 
 async function nextweekClicked() {
-    if (contractInstance != null) {
-    try {
-      let value = await contractInstance.methods.GoingToNextWeekLotto().send({from:accounts[0]});
-      resultbox.innerHTML = value;
-    } catch (e) {
-      resultbox.innerHTML = "Error Occured: " + e;
-    }
-  }
+	if (contractInstance != null) {
+		if (accounts[0].toLowerCase() != (await contractInstance.methods.owner().call()).toLowerCase()){
+			// console.log((await contractInstance.methods.owner().call()).toLowerCase())
+			alert('only OWNER')
+		}
+		else{
+			try {
+			let value = await contractInstance.methods.GoingToNextWeekLotto().send({from:accounts[0]});
+			resultbox.innerHTML = value;
+			
+			} catch (e) {
+		}
+
+		}
+		
+		
+	}
+	else{
+		alert('Please click the MetaMask')
+
 }
+}
+    
 
 async function ownerClicked() {
   const value = await contractInstance.methods.owner().call();
-  resultbox.innerHTML = value;
+  owner.innerHTML = value;
 }
 
 
 
 </script></head>
+
 <body>
-<h1> lotto hihihihi </h1>
+	<center>
+<head><img src="./img/lottoTitle.png"  height="108px" width="192px" >  </img></head>
 <br/>
-<input type="image" id="btn" src="./img/MetaMask_Fox.svg.png" height="80" width="80" value="Connect to MetaMask">
-<h2>cost : 1 ether</h2>
-<h2>Account: <span class="showAccount"></span></h2>
+<!-- <div style="width: 100px; height:200px; float: left;"> -->
+	<input type="image" id="btn" src="./img/MetaMask_Fox.svg.png" height="80" width="80" value="Connect to MetaMask">
+	<!-- </div> -->
+	<div>
+		<div class="info">Account: <span class="showAccount"></span> 
+			<br/>
+		
+		Balance: <span class="showBalance"> </span> </div>
+	</div>
+<h1>Cost : 0.1 ether</h1>
+
 <!-- <h2>My balance: </h2> -->
 
-<input type="button" id="play" value="play">
+<input class="lotto-button" type="button" id="play" value="Play">
+
+<input class="lotto-button" type="button" id="raffle" value="Raffle">
+
+<input class="lotto-button" type="button" id="next_week" value="One More">
 <br/>
-<input type="button" id="getwinner" value="winner">
+<div class="play_div"><input class="inbtn" type="button" id="getwinner" value="winner"> <span id="winner"> </span>
+	<br/><br/>
+	<input input class="inbtn" type="button" id="get_p" value="participants">  <span id="participants"> </span>
+	<br/><br/>
+	<input input class="inbtn" type="button" id="getOwner" value="owner">  <span id="owner"> </span>
+	<br/><br/>
+	<input input class="inbtn" type="button" id="getTotal" value="total">  <span id="total"> </span> 
+
+</div>	
+
+<div>
+	<img src="./img/madeby.png"  height="40" width="394" >  </img>
+</div>
+<div>
+	<a href="https://youtu.be/sl_hGOT_cps">
+		<img src="./img/youtube.png"height="40" width="394">
+	</a>
+</div>
 <br/>
-<input type="button" id="raffle" value="Go">
-<br/>
-<input type="button" id="next_week" value="One More">
-<br/>
-<input type="button" id="get_p" value="participants">
 <br/>
 <br/>
-Result: <span id="resultbox"> </span>
+<!-- Result: <span id="resultbox"> </span> -->
+
+</center>
 </body> </html>
