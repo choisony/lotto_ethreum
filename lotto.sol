@@ -15,7 +15,7 @@ contract lotto {
     }
 
     function play() public payable{
-        require(msg.value == 0.1 ether, "You need to have 0.01 ether");
+        require(msg.value == 0.1 ether, "You need to have 0.1 ether");
         require(week_ended == false, "Wait for next week");
 
         participants.push(payable(msg.sender));
@@ -55,10 +55,6 @@ contract lotto {
 
     function myEtherBalance() view public returns(uint) {
         return (msg.sender).balance/ (10**18);
-    }
-
-    function myAddress() view private returns(address){
-        return address(msg.sender);
     }
 
 
